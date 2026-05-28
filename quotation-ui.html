@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Health & Wellness Product Inquiry - 外贸自助报价系统</title>
+<!-- jsPDF for PDF generation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --primary: #1a73e8;
+  --primary-light: #e8f0fe;
+  --success: #34a853;
+  --warning: #fbbc04;
+  --danger: #ea4335;
+  --gray-50: #f8f9fa;
+  --gray-100: #f1f3f4;
+  --gray-200: #e8eaed;
+  --gray-300: #dadce0;
+  --gray-500: #9aa0a6;
+  --gray-700: #5f6368;
+  --gray-900: #202124;
+  --radius: 12px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.08);
+  --shadow-lg: 0 10px 40px rgba(0,0,0,0.15);
+}
+body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--gray-50); color: var(--gray-900); line-height: 1.6; }
+
+/* Header */
+.header { background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 100%); color: #fff; padding: 20px 32px; position: sticky; top:0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+.header-inner { max-width: 1400px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
+.header h1 { font-size: 20px; font-weight: 600; }
+.header h1 span { font-weight: 300; opacity: 0.8; font-size: 14px; margin-left: 12px; }
+.header-actions { display: flex; gap: 12px; align-items: center; }
+.cart-badge { position: relative; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: #fff; border-radius: 8px; padding: 8px 16px; cursor: pointer; font-size: 14px; transition: all .2s; }
+.cart-badge:hover { background: rgba(255,255,255,0.25); }
+.cart-badge .count { background: var(--danger); color: #fff; border-radius: 50%; width: 20px; height: 20px; display: inline-flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; margin-left: 6px; }
+
+/* Layout */
+.container { max-width: 1400px; margin: 0 auto; padding: 24px 32px; }
+
+/* Filter Bar */
+.filter-bar { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 24px; align-items: center; }
+.filter-bar select, .filter-bar input { padding: 10px 14px; border: 1px solid var(--gray-300); border-radius: 8px; font-size: 14px; background: #fff; outline: none; transition: border .2s; }
+.filter-bar select:focus, .filter-bar input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(26,115,232,0.15); }
+.filter-bar .search { flex: 1; min-width: 200px; }
+.chip { padding: 8px 16px; border-radius: 20px; font-size: 13px; cursor: pointer; border: 1px solid var(--gray-300); background: #fff; transition: all .2s; white-space: nowrap; }
+.chip:hover { border-color: var(--primary); color: var(--primary); }
+.chip.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+/* Product Grid */
+.product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px; }
+.product-card { background: #fff; border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; transition: all .25s; border: 2px solid transparent; display: flex; flex-direction: column; }
+.product-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
+.product-card.in-cart { border-color: var(--primary); }
+.product-card.no-price { opacity: 0.6; }
+
+/* Product Image */
+.card-image { position: relative; height: 220px; overflow: hidden; display: flex; align-items: center; justify-content: center; background: var(--gray-100); }
+.card-image img { width: 100%; height: 100%; object-fit: contain; padding: 12px; transition: transform .3s; }
+.product-card:hover .card-image img { transform: scale(1.03); }
+.card-image .item-badge { position: absolute; top: 10px; left: 10px; background: rgba(255,255,255,0.92); backdrop-filter: blur(4px); border-radius: 8px; padding: 3px 10px; font-size: 12px; font-weight: 700; color: var(--gray-700); box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
+.card-image .cart-indicator { position: absolute; top: 10px; right: 10px; background: var(--primary); color: #fff; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; font-size: 14px; box-shadow: 0 2px 6px rgba(26,115,232,0.3); animation: popIn .3s ease; }
+@keyframes popIn { 0% { transform: scale(0); } 70% { transform: scale(1.2); } 100% { transform: scale(1); } }
+
+/* Color Swatches */
+.color-swatches { display: flex; gap: 6px; padding: 8px 20px 4px; align-items: center; flex-wrap: wrap; }
+.color-swatches .swatch-label { font-size: 11px; color: var(--gray-500); margin-right: 2px; }
+.color-swatch { width: 24px; height: 24px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: all .2s; position: relative; box-shadow: 0 1px 3px rgba(0,0,0,0.15); }
+.color-swatch:hover { transform: scale(1.2); }
+.color-swatch.selected { border-color: var(--primary); box-shadow: 0 0 0 2px var(--primary-light); }
+.color-swatch.selected::after {
+  content: '✓';
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+}
+.color-swatch .swatch-tip { display: none; position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); background: var(--gray-900); color: #fff; padding: 3px 8px; border-radius: 4px; font-size: 10px; white-space: nowrap; margin-bottom: 4px; pointer-events: none; z-index: 5; }
+.color-swatch:hover .swatch-tip { display: block; }
+.color-swatch.light-color { border-color: var(--gray-300); }
+.color-swatch.selected.light-color::after { color: var(--gray-700); text-shadow: none; }
+
+.card-header { padding: 12px 20px 6px; }
+.card-family { font-size: 13px; color: var(--primary); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+.card-title { font-size: 16px; font-weight: 600; margin-top: 4px; }
+.card-body { padding: 8px 20px 16px; }
+.card-specs { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.spec-tag { background: var(--gray-100); padding: 3px 10px; border-radius: 12px; font-size: 12px; color: var(--gray-700); }
+.card-detail { margin-top: 10px; font-size: 13px; color: var(--gray-700); line-height: 1.5; }
+.card-detail span { display: block; }
+.card-meta { display: flex; gap: 16px; margin-top: 10px; font-size: 13px; color: var(--gray-500); }
+.card-footer { padding: 12px 20px; border-top: 1px solid var(--gray-200); display: flex; justify-content: space-between; align-items: center; }
+.price { font-size: 22px; font-weight: 700; color: var(--primary); }
+.price small { font-size: 13px; font-weight: 400; color: var(--gray-500); }
+.price.pending { font-size: 14px; color: var(--gray-500); font-weight: 400; }
+.btn { padding: 8px 20px; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; border: none; transition: all .2s; }
+.btn-primary { background: var(--primary); color: #fff; }
+.btn-primary:hover { background: #1557b0; }
+.btn-outline { background: #fff; color: var(--primary); border: 1px solid var(--primary); }
+.btn-outline:hover { background: var(--primary-light); }
+.btn-success { background: var(--success); color: #fff; }
+.btn-success:hover { background: #2d9249; }
+.btn-danger { background: #fff; color: var(--danger); border: 1px solid var(--danger); }
+.btn-danger:hover { background: #fce8e6; }
+.btn-sm { padding: 6px 14px; font-size: 13px; }
+
+/* Cart Drawer */
+.drawer-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 200; opacity: 0; pointer-events: none; transition: opacity .3s; }
+.drawer-overlay.open { opacity: 1; pointer-events: auto; }
+.drawer { position: fixed; right: -520px; top: 0; width: 520px; max-width: 90vw; height: 100vh; background: #fff; z-index: 201; transition: right .3s; display: flex; flex-direction: column; box-shadow: -4px 0 20px rgba(0,0,0,0.1); }
+.drawer.open { right: 0; }
+.drawer-header { padding: 20px 24px; border-bottom: 1px solid var(--gray-200); display: flex; justify-content: space-between; align-items: center; }
+.drawer-header h2 { font-size: 18px; }
+.drawer-close { width: 36px; height: 36px; border-radius: 50%; border: none; background: var(--gray-100); cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; }
+.drawer-body { flex: 1; overflow-y: auto; padding: 16px 24px; }
+.cart-item { display: flex; gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--gray-200); align-items: flex-start; }
+.cart-item-img { width: 52px; height: 52px; border-radius: 8px; object-fit: contain; background: var(--gray-100); flex-shrink: 0; }
+.cart-item-info { flex: 1; min-width: 0; }
+.cart-item-info .name { font-size: 14px; font-weight: 600; }
+.cart-item-info .meta { font-size: 12px; color: var(--gray-500); margin-top: 2px; }
+.cart-item-info .color-line { font-size: 12px; margin-top: 3px; display: flex; align-items: center; gap: 6px; }
+.cart-item-info .color-dot { width: 14px; height: 14px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+.cart-item-info .price-line { font-size: 14px; color: var(--primary); font-weight: 600; margin-top: 4px; }
+.remove-btn { background: none; border: none; color: var(--gray-500); cursor: pointer; font-size: 16px; padding: 4px; flex-shrink: 0; }
+.remove-btn:hover { color: var(--danger); }
+.drawer-footer { padding: 20px 24px; border-top: 1px solid var(--gray-200); }
+.drawer-footer .total { display: flex; justify-content: space-between; font-size: 16px; font-weight: 600; margin-bottom: 16px; }
+.drawer-footer .total .amount { color: var(--primary); font-size: 20px; }
+.bulk-hint { background: #fff8e1; border: 1px solid #ffe082; border-radius: 8px; padding: 10px 14px; font-size: 13px; color: #7c6800; margin-bottom: 14px; line-height: 1.5; }
+.drawer-actions { display: flex; gap: 10px; }
+.drawer-actions .btn { flex: 1; text-align: center; }
+
+/* ===== Purchase Modal (选购弹窗) ===== */
+.purchase-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 250; display: none; align-items: center; justify-content: center; padding: 24px; }
+.purchase-overlay.open { display: flex; }
+.purchase-modal { background: #fff; border-radius: 16px; width: 100%; max-width: 500px; max-height: 85vh; overflow-y: auto; box-shadow: var(--shadow-lg); animation: modalIn .25s ease; }
+@keyframes modalIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+.purchase-header { padding: 20px 24px; border-bottom: 1px solid var(--gray-200); display: flex; align-items: center; gap: 16px; }
+.purchase-header img { width: 80px; height: 80px; object-fit: contain; border-radius: 10px; background: var(--gray-100); flex-shrink: 0; }
+.purchase-header .ph-info { flex: 1; min-width: 0; }
+.purchase-header .ph-name { font-size: 16px; font-weight: 600; }
+.purchase-header .ph-model { font-size: 13px; color: var(--gray-500); margin-top: 2px; }
+.purchase-header .ph-price { font-size: 20px; font-weight: 700; color: var(--primary); margin-top: 4px; }
+.purchase-header .ph-price small { font-size: 12px; font-weight: 400; color: var(--gray-500); }
+.purchase-close { width: 32px; height: 32px; border-radius: 50%; border: none; background: var(--gray-100); cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.purchase-body { padding: 20px 24px; }
+.purchase-section-label { font-size: 13px; font-weight: 600; color: var(--gray-700); margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+.color-select-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--gray-100); }
+.color-select-row:last-child { border-bottom: none; }
+.csr-swatch { width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: all .2s; position: relative; flex-shrink: 0; box-shadow: 0 1px 3px rgba(0,0,0,0.15); }
+.csr-swatch:hover { transform: scale(1.15); }
+.csr-swatch.checked { border-color: var(--primary); box-shadow: 0 0 0 2px var(--primary-light); }
+.csr-swatch.checked::after {
+  content: '✓';
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+}
+.csr-swatch.light-color { border-color: var(--gray-300); }
+.csr-swatch.checked.light-color::after { color: var(--gray-700); text-shadow: none; }
+.csr-label { font-size: 14px; color: var(--gray-900); flex: 1; }
+.csr-label small { color: var(--gray-500); font-size: 12px; }
+.csr-unit-price { font-size: 14px; font-weight: 600; color: var(--primary); white-space: nowrap; }
+.purchase-footer { padding: 16px 24px; border-top: 1px solid var(--gray-200); display: flex; gap: 12px; justify-content: flex-end; align-items: center; }
+.purchase-hint { font-size: 12px; color: var(--gray-500); margin-right: auto; }
+
+/* ===== Modal Base ===== */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 300; display: none; align-items: center; justify-content: center; padding: 24px; }
+.modal-overlay.open { display: flex; }
+.modal { background: #fff; border-radius: 16px; width: 100%; max-width: 800px; max-height: 90vh; overflow-y: auto; box-shadow: var(--shadow-lg); animation: modalIn .25s ease; }
+.modal-header { padding: 24px 28px; border-bottom: 1px solid var(--gray-200); display: flex; justify-content: space-between; align-items: center; }
+.modal-header h2 { font-size: 20px; }
+.modal-body { padding: 24px 28px; }
+.modal-footer { padding: 16px 28px; border-top: 1px solid var(--gray-200); display: flex; gap: 12px; justify-content: flex-end; }
+
+/* ===== Quote PDF Form ===== */
+.quote-form { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.form-group { display: flex; flex-direction: column; }
+.form-group.full { grid-column: 1 / -1; }
+.form-group label { font-size: 13px; font-weight: 600; color: var(--gray-700); margin-bottom: 6px; }
+.form-group input, .form-group select, .form-group textarea { padding: 10px 14px; border: 1px solid var(--gray-300); border-radius: 8px; font-size: 14px; outline: none; transition: border .2s; }
+.form-group input:focus, .form-group select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(26,115,232,0.15); }
+.form-group textarea { resize: vertical; min-height: 60px; }
+
+/* Section Divider */
+.section-divider { font-size: 15px; font-weight: 600; color: var(--gray-700); margin: 20px 0 12px; padding-bottom: 8px; border-bottom: 2px solid var(--primary-light); }
+
+/* Email Modal (simple) */
+.email-preview { background: var(--gray-100); border-radius: 10px; padding: 20px; font-family: monospace; font-size: 13px; white-space: pre-wrap; line-height: 1.8; border: 1px solid var(--gray-200); margin-top: 16px; }
+
+/* Badge */
+.status-badge { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; }
+.status-badge.in-stock { background: #e6f4ea; color: #1e8e3e; }
+.status-badge.pending { background: #fef7e0; color: #b06000; }
+
+/* Empty State */
+.empty-state { text-align: center; padding: 48px 24px; color: var(--gray-500); }
+.empty-state .icon { font-size: 48px; margin-bottom: 12px; }
+
+@media print {
+  .header, .filter-bar, .btn, .drawer, .modal-overlay, .purchase-overlay, .product-grid { display: none !important; }
+}
+@media (max-width: 768px) {
+  .header { padding: 16px; }
+  .container { padding: 16px; }
+  .product-grid { grid-template-columns: 1fr; }
+  .quote-form { grid-template-columns: 1fr; }
+  .form-group.full { grid-column: 1; }
+  .card-image { height: 180px; }
+  .purchase-modal { max-width: 95vw; max-height: 92vh; }
+  .drawer-actions { flex-direction: column; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <h1>🩺 Health & Wellness<span>外贸自助报价系统 | FOB Qingdao · 汇率 6.8 · MOQ 300PCS</span></h1>
+    <div class="header-actions">
+      <button class="cart-badge" onclick="toggleDrawer()">
+        🛒 询价清单<span class="count" id="cartCount">0</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="filter-bar">
+    <input type="text" class="search" id="searchInput" placeholder="🔍 搜索产品名称、型号、规格..." oninput="filterProducts()">
+    <div id="categoryChips"></div>
+  </div>
+  <div class="product-grid" id="productGrid"></div>
+</div>
+
+<!-- Cart Drawer -->
+<div class="drawer-overlay" id="drawerOverlay" onclick="toggleDrawer()"></div>
+<div class="drawer" id="cartDrawer">
+  <div class="drawer-header">
+    <h2>📋 询价清单</h2>
+    <button class="drawer-close" onclick="toggleDrawer()">✕</button>
+  </div>
+  <div class="drawer-body" id="cartBody">
+    <div class="empty-state" id="cartEmpty">
+      <div class="icon">📋</div>
+      <p>还没有添加产品</p>
+      <p style="font-size:13px;margin-top:4px;">点击产品卡片上的「加入询价」开始</p>
+    </div>
+    <div id="cartItems"></div>
+  </div>
+  <div class="drawer-footer" id="cartFooter" style="display:none">
+    <div class="bulk-hint">💡 大批量订单请直接邮件咨询，可享更优惠价格</div>
+    <div class="drawer-actions">
+      <button class="btn btn-primary" onclick="openQuotePDFModal()">📄 生成报价单</button>
+      <button class="btn btn-outline" onclick="openEmailModal()">📧 邮件咨询</button>
+    </div>
+    <button class="btn btn-danger btn-sm" style="width:100%;margin-top:8px" onclick="clearCart()">清空清单</button>
+  </div>
+</div>
+
+<!-- Purchase Modal -->
+<div class="purchase-overlay" id="purchaseOverlay">
+  <div class="purchase-modal">
+    <div class="purchase-header">
+      <img id="pmImage" src="" alt="">
+      <div class="ph-info">
+        <div class="ph-name" id="pmName"></div>
+        <div class="ph-model" id="pmModel"></div>
+        <div class="ph-price" id="pmPrice"></div>
+      </div>
+      <button class="purchase-close" onclick="closePurchaseModal()">✕</button>
+    </div>
+    <div class="purchase-body">
+      <div class="purchase-section-label">🎨 选择感兴趣的颜色（可多选）</div>
+      <div id="pmColorRows"></div>
+    </div>
+    <div class="purchase-footer">
+      <span class="purchase-hint">具体数量后续邮件沟通</span>
+      <button class="btn btn-outline" onclick="closePurchaseModal()">取消</button>
+      <button class="btn btn-primary" onclick="confirmPurchase()">加入询价</button>
+    </div>
+  </div>
+</div>
+
+<!-- Quote PDF Modal -->
+<div class="modal-overlay" id="quotePDFModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>📄 生成报价单 PDF</h2>
+      <button class="drawer-close" onclick="closeQuotePDFModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="section-divider">报价方信息</div>
+      <div class="quote-form">
+        <div class="form-group">
+          <label>公司名称</label>
+          <input type="text" id="qSellerCompany" value="Health & Wellness Medical Devices Co., Ltd." placeholder="Your Company Name">
+        </div>
+        <div class="form-group">
+          <label>联系人</label>
+          <input type="text" id="qSellerContact" placeholder="Sales Representative">
+        </div>
+        <div class="form-group">
+          <label>电话</label>
+          <input type="text" id="qSellerPhone" placeholder="+86 xxx xxxx xxxx">
+        </div>
+        <div class="form-group">
+          <label>邮箱</label>
+          <input type="email" id="qSellerEmail" placeholder="sales@company.com">
+        </div>
+      </div>
+      <div class="section-divider">客户信息</div>
+      <div class="quote-form">
+        <div class="form-group">
+          <label>客户公司</label>
+          <input type="text" id="qBuyerCompany" placeholder="Client Company Name">
+        </div>
+        <div class="form-group">
+          <label>联系人</label>
+          <input type="text" id="qBuyerContact" placeholder="Contact Person">
+        </div>
+        <div class="form-group">
+          <label>国家 / 地区</label>
+          <input type="text" id="qBuyerCountry" placeholder="e.g. Mexico, Colombia">
+        </div>
+        <div class="form-group">
+          <label>客户邮箱</label>
+          <input type="email" id="qBuyerEmail" placeholder="client@email.com">
+        </div>
+      </div>
+      <div class="section-divider">贸易条款</div>
+      <div class="quote-form">
+        <div class="form-group">
+          <label>贸易术语</label>
+          <select id="qIncoterm">
+            <option value="FOB">FOB</option>
+            <option value="CIF">CIF</option>
+            <option value="CFR">CFR</option>
+            <option value="EXW">EXW</option>
+            <option value="DDP">DDP</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>装运港</label>
+          <select id="qPort"></select>
+        </div>
+        <div class="form-group">
+          <label>目的港</label>
+          <input type="text" id="qDestPort" placeholder="e.g. Manzanillo, Buenos Aires">
+        </div>
+        <div class="form-group">
+          <label>付款方式</label>
+          <select id="qPayment">
+            <option value="T/T 30% deposit, 70% before shipment">T/T 30%预付, 70%发货前</option>
+            <option value="T/T 100% in advance">T/T 100%预付</option>
+            <option value="L/C at sight">L/C 即期</option>
+            <option value="D/P at sight">D/P 即期</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>报价有效期</label>
+          <input type="text" id="qValidity" value="30 days" placeholder="e.g. 30 days">
+        </div>
+        <div class="form-group">
+          <label>交货期</label>
+          <input type="text" id="qLeadTime" value="30-45 days after deposit" placeholder="e.g. 30-45 days">
+        </div>
+      </div>
+      <div class="section-divider">备注</div>
+      <div class="quote-form">
+        <div class="form-group full">
+          <label>附加说明</label>
+          <textarea id="qNotes" placeholder="e.g. 定制包装要求、质量标准等"></textarea>
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:24px;">
+        <button class="btn btn-primary" style="padding:12px 48px;font-size:16px" onclick="generatePDF()">📄 下载报价单 PDF</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Email Modal -->
+<div class="modal-overlay" id="emailModal">
+  <div class="modal" style="max-width:700px">
+    <div class="modal-header">
+      <h2>📧 邮件咨询</h2>
+      <button class="drawer-close" onclick="closeEmailModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="quote-form">
+        <div class="form-group full">
+          <label>收件邮箱</label>
+          <input type="email" id="eRecipient" placeholder="sales@company.com">
+        </div>
+        <div class="form-group">
+          <label>公司名称</label>
+          <input type="text" id="eCompany" placeholder="Your Company Name">
+        </div>
+        <div class="form-group">
+          <label>联系人</label>
+          <input type="text" id="eContact" placeholder="Your Name">
+        </div>
+        <div class="form-group full">
+          <label>补充说明</label>
+          <textarea id="eNotes" placeholder="e.g. 需要每个颜色各多少件、定制包装要求、目标价格等"></textarea>
+        </div>
+      </div>
+      <div class="email-preview" id="emailPreview"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="copyEmailText()">📋 复制邮件内容</button>
+      <button class="btn btn-primary" onclick="openMailto()">📨 打开邮件客户端</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const IMG_BASE = 'product-images/';
+
+const PRODUCTS = [
+  {item:1,family_name:"ANDADERA SENCILLA",family_name_en:"Standard walker / Basic walker",family_cn:"普通简易助行器",specs:["Aluminum","PVC","Plastic"],item_no:"ZX2501",detail:"铝合金管身\n6档高度可调节\n表面喷涂",pcs_ctn:6,size:"59.5×50×79~91.5cm",cbm:0.81*0.46*0.62,hq40:1766,fob:17.5,image:"image2.png",colors:[{name:"Negro",hex:"#1a1a1a",label:"黑色"},{name:"Azul Metálico",hex:"#1e3a5f",label:"金属蓝"},{name:"Bronce / Madera",hex:"#8B6914",label:"古铜/木纹"},{name:"Rojo / Madera",hex:"#722F37",label:"红木色"},{name:"Plata / Cromo",hex:"#C0C0C0",label:"银/铬色"}]},
+  {item:2,family_name:"ANDADERA DOBLE",family_name_en:"Double reinforced walker / Heavy-duty walker",family_cn:"加固双框助行器",specs:["Aluminum","PVC","Plastic"],item_no:"ZX2502",detail:"铝合金管身\n6档高度可调节\n表面喷涂",pcs_ctn:6,size:"59.5×50×79~91.5cm",cbm:0.81*0.46*0.62,hq40:1766,fob:17,image:"image4.png",colors:[{name:"Negro",hex:"#1a1a1a",label:"黑色"},{name:"Azul Metálico",hex:"#1e3a5f",label:"金属蓝"},{name:"Bronce / Madera",hex:"#8B6914",label:"古铜/木纹"},{name:"Rojo / Madera",hex:"#722F37",label:"红木色"},{name:"Plata / Cromo",hex:"#C0C0C0",label:"银/铬色"}]},
+  {item:3,family_name:"ANDADERA CON ASIENTO",family_name_en:"Walker with seat",family_cn:"带座助行器",specs:["Steel","PVC","Plastic"],item_no:"LN2517",detail:"铁结构管身",pcs_ctn:1,size:"62×61×79.5~92.5cm",cbm:0.65*0.4*1.05,hq40:249,fob:48,image:"image5.png",colors:[{name:"Negro",hex:"#1a1a1a",label:"黑色"},{name:"Azul Metálico",hex:"#1e3a5f",label:"金属蓝"},{name:"Bronce / Madera",hex:"#8B6914",label:"古铜/木纹"},{name:"Rojo / Madera",hex:"#722F37",label:"红木色"},{name:"Plata / Cromo",hex:"#C0C0C0",label:"银/铬色"}]},
+  {item:4,family_name:"ANDADERA CON ASIENTO",family_name_en:"Walker with seat",family_cn:"带座助行器",specs:["Aluminum","Nylon","PVC","PU"],item_no:"LN2518",detail:"碳纤维结构",pcs_ctn:1,size:"69×61×81~86cm",cbm:0.74*0.27*0.88,hq40:387,fob:189,image:"image7.png",colors:[{name:"Negro",hex:"#1a1a1a",label:"黑色"},{name:"Azul Metálico",hex:"#1e3a5f",label:"金属蓝"},{name:"Bronce / Madera",hex:"#8B6914",label:"古铜/木纹"},{name:"Rojo / Madera",hex:"#722F37",label:"红木色"},{name:"Plata / Cromo",hex:"#C0C0C0",label:"银/铬色"}]},
+  {item:5,family_name:"ANDADERA CON ASIENTO",family_name_en:"Walker with seat",family_cn:"带座助行器",specs:["Aluminum","Nylon","PVC","PU"],item_no:"*",detail:"待确认",pcs_ctn:0,size:"—",cbm:0,hq40:0,fob:0,image:"image8.png",colors:[{name:"Negro",hex:"#1a1a1a",label:"黑色"},{name:"Azul Metálico",hex:"#1e3a5f",label:"金属蓝"},{name:"Bronce / Madera",hex:"#8B6914",label:"古铜/木纹"},{name:"Rojo / Madera",hex:"#722F37",label:"红木色"},{name:"Plata / Cromo",hex:"#C0C0C0",label:"银/铬色"}]},
+  {item:6,family_name:"ANDADERA CON RUEDAS",family_name_en:"Wheeled walker / Rollator",family_cn:"带轮助行器",specs:["Aluminum","PVC","Plastic"],item_no:"ZX2503",detail:"铝合金管身\n6档高度可调节\n表面喷涂",pcs_ctn:6,size:"59.5×50×79~91.5cm",cbm:0.81*0.46*0.62,hq40:1766,fob:17.2,image:"image9.png",colors:[{name:"Negro",hex:"#1a1a1a",label:"黑色"},{name:"Azul Metálico",hex:"#1e3a5f",label:"金属蓝"},{name:"Bronce / Madera",hex:"#8B6914",label:"古铜/木纹"},{name:"Rojo / Madera",hex:"#722F37",label:"红木色"},{name:"Plata / Cromo",hex:"#C0C0C0",label:"银/铬色"}]},
+  {item:7,family_name:"MULETAS",family_name_en:"Crutches",family_cn:"拐杖 / 腋拐",specs:["Aluminum","PVC","Plastic"],item_no:"*",detail:"待确认",pcs_ctn:0,size:"—",cbm:0,hq40:0,fob:0,image:"image10.png",colors:[{name:"Black",hex:"#000000",label:"黑色"},{name:"Red",hex:"#D9281C",label:"红色"},{name:"Blue",hex:"#1b3a6e",label:"蓝色"},{name:"Gray",hex:"#C0C0C0",label:"灰色"}]},
+  {item:8,family_name:"BASTON 1 APOYO",family_name_en:"Single-point cane",family_cn:"单脚手杖",specs:["Aluminum","PVC","Plastic"],item_no:"SZ2904G-20",detail:"铝制管件",pcs_ctn:20,size:"75~98cm",cbm:0.77*0.21*0.47,hq40:17895,fob:3.2,image:"image11.png",colors:[{name:"Black",hex:"#000000",label:"黑色"},{name:"Red",hex:"#D9281C",label:"红色"},{name:"Blue",hex:"#1b3a6e",label:"蓝色"},{name:"Gray",hex:"#C0C0C0",label:"灰色"}]},
+  {item:9,family_name:"BASTON 1 APOYO",family_name_en:"Single-point cane",family_cn:"单脚手杖",specs:["Aluminum","PVC","Plastic"],item_no:"SZ2901",detail:"铝制管件\n防滑橡胶脚垫",pcs_ctn:20,size:"70~92.5cm",cbm:0.6*0.22*0.45,hq40:22896,fob:3.8,image:"image13.png",colors:[{name:"Black",hex:"#000000",label:"黑色"},{name:"Red",hex:"#D9281C",label:"红色"},{name:"Blue",hex:"#1b3a6e",label:"蓝色"},{name:"Gray",hex:"#C0C0C0",label:"灰色"}]},
+  {item:10,family_name:"BASTON 1 APOYO",family_name_en:"Single-point cane",family_cn:"单脚手杖",specs:["Aluminum","PVC","Plastic"],item_no:"SZ2921",detail:"铝制管件\n防滑橡胶脚垫",pcs_ctn:20,size:"78~88cm",cbm:0.7*0.22*0.45,hq40:19625,fob:4.5,image:"image14.png",colors:[{name:"Black",hex:"#000000",label:"黑色"},{name:"Red",hex:"#D9281C",label:"红色"},{name:"Blue",hex:"#1b3a6e",label:"蓝色"},{name:"Gray",hex:"#C0C0C0",label:"灰色"}]},
+  {item:11,family_name:"BASTON 1 APOYO",family_name_en:"Single-point cane",family_cn:"单脚手杖",specs:["Aluminum","PVC","Plastic"],item_no:"SZ9611",detail:"铝制管件\n防滑橡胶脚垫",pcs_ctn:20,size:"78~88cm",cbm:0.7*0.22*0.45,hq40:19625,fob:6,image:"image15.png",colors:[{name:"Black",hex:"#000000",label:"黑色"},{name:"Red",hex:"#D9281C",label:"红色"},{name:"Blue",hex:"#1b3a6e",label:"蓝色"},{name:"Gray",hex:"#C0C0C0",label:"灰色"}]},
+  {item:12,family_name:"BASTON 1 APOYO",family_name_en:"Single-point cane",family_cn:"单脚手杖",specs:["Aluminum","PVC","Plastic"],item_no:"SZ2902",detail:"铝制管件\n防滑橡胶脚垫",pcs_ctn:20,size:"75~98cm",cbm:0.77*0.21*0.47,hq40:17895,fob:3.6,image:"image16.png",colors:[{name:"Black",hex:"#000000",label:"黑色"},{name:"Red",hex:"#D9281C",label:"红色"},{name:"Blue",hex:"#1b3a6e",label:"蓝色"},{name:"Gray",hex:"#C0C0C0",label:"灰色"}]},
+  {item:13,family_name:"BASTON 1 APOYO",family_name_en:"Single-point cane",family_cn:"单脚手杖",specs:["Aluminum","PVC","Plastic"],item_no:"SZ2902B",detail:"铝制管件\n防滑橡胶脚垫",pcs_ctn:20,size:"70~92.5cm",cbm:0.6*0.22*0.45,hq40:22896,fob:4.5,image:"image17.png",colors:[{name:"Black",hex:"#000000",label:"黑色"},{name:"Red",hex:"#D9281C",label:"红色"},{name:"Blue",hex:"#1b3a6e",label:"蓝色"},{name:"Gray",hex:"#C0C0C0",label:"灰色"}]},
+  {item:14,family_name:"BASTON 4 APOYOS",family_name_en:"Quad cane / Four-point cane",family_cn:"四脚拐杖",specs:["Aluminum","PVC","Plastic"],item_no:"SZ2903G-20405",detail:"铝铁分段杖身",pcs_ctn:1,size:"72~94.5cm",cbm:0.235*0.185*0.74,hq40:2114,fob:4.92,image:"image18.png",colors:[{name:"Dark Gray",hex:"#3d3d3d",label:"深灰"},{name:"Gray",hex:"#9E9E9E",label:"灰色"},{name:"Beige",hex:"#f5e6c8",label:"米白"},{name:"Brown",hex:"#8B5A2B",label:"棕色"},{name:"Dark Brown",hex:"#4a2c17",label:"深棕"}]},
+  {item:15,family_name:"BASTON 4 APOYOS",family_name_en:"Quad cane / Four-point cane",family_cn:"四脚拐杖",specs:["Aluminum","PVC","Plastic"],item_no:"SZ2901D-11",detail:"轻质铝制杖身",pcs_ctn:16,size:"72~95cm",cbm:0.5*0.5*0.76,hq40:5726,fob:6.15,image:"image19.png",colors:[{name:"Dark Gray",hex:"#3d3d3d",label:"深灰"},{name:"Gray",hex:"#9E9E9E",label:"灰色"},{name:"Beige",hex:"#f5e6c8",label:"米白"},{name:"Brown",hex:"#8B5A2B",label:"棕色"},{name:"Dark Brown",hex:"#4a2c17",label:"深棕"}]},
+  {item:16,family_name:"BASTON 4 APOYOS",family_name_en:"Quad cane / Four-point cane",family_cn:"四脚拐杖",specs:["Aluminum","PVC","Plastic"],item_no:"",detail:"待确认",pcs_ctn:0,size:"—",cbm:0,hq40:0,fob:0,image:"image20.png",colors:[{name:"Dark Gray",hex:"#3d3d3d",label:"深灰"},{name:"Gray",hex:"#9E9E9E",label:"灰色"},{name:"Beige",hex:"#f5e6c8",label:"米白"},{name:"Brown",hex:"#8B5A2B",label:"棕色"},{name:"Dark Brown",hex:"#4a2c17",label:"深棕"}]},
+  {item:17,family_name:"BASTON CON ASIENTO",family_name_en:"Cane with seat / Seat cane",family_cn:"带座手杖",specs:["Aluminum","PVC","Plastic"],item_no:"SZ2931K",detail:"轻质铝制杖身",pcs_ctn:6,size:"—",cbm:0.84*0.35*0.5,hq40:2776,fob:8.8,image:"image12.png",colors:[{name:"Dark Gray",hex:"#3d3d3d",label:"深灰"},{name:"Gray",hex:"#9E9E9E",label:"灰色"},{name:"Beige",hex:"#f5e6c8",label:"米白"},{name:"Brown",hex:"#8B5A2B",label:"棕色"},{name:"Dark Brown",hex:"#4a2c17",label:"深棕"}]},
+  {item:18,family_name:"SILLA DE RUEDAS SENCILLA",family_name_en:"Basic wheelchair / Standard wheelchair",family_cn:"普通简易轮椅",specs:["Aluminum","Steel","Nylon","PU","Rubber"],item_no:"—",detail:"待确认",pcs_ctn:0,size:"—",cbm:0,hq40:0,fob:0,image:"image22.png",colors:[{name:"Dark Blue",hex:"#1a365d",label:"深蓝"},{name:"Bright Blue",hex:"#0891b2",label:"亮蓝"},{name:"Navy",hex:"#172554",label:"藏青"},{name:"Light Blue",hex:"#bae6fd",label:"浅蓝"},{name:"White",hex:"#ffffff",label:"白色",light:true}]},
+  {item:19,family_name:"SILLA DE RUEDAS INTERMEDIA",family_name_en:"Mid-range wheelchair",family_cn:"中档轮椅",specs:["Aluminum","Steel","Nylon","PU","Rubber"],item_no:"—",detail:"待确认",pcs_ctn:0,size:"—",cbm:0,hq40:0,fob:0,image:"image23.png",colors:[{name:"Dark Gray",hex:"#3d3d3d",label:"深灰"},{name:"Gray",hex:"#9E9E9E",label:"灰色"},{name:"Beige",hex:"#f5e6c8",label:"米白"},{name:"Brown",hex:"#8B5A2B",label:"棕色"},{name:"Dark Brown",hex:"#4a2c17",label:"深棕"}]},
+  {item:20,family_name:"SILLA DE RUEDAS INTERMEDIA",family_name_en:"Mid-range wheelchair",family_cn:"中档轮椅",specs:["Aluminum","Steel","Nylon","PU","Rubber"],item_no:"—",detail:"待确认",pcs_ctn:0,size:"—",cbm:0,hq40:0,fob:0,image:"image24.png",colors:[{name:"Dark Gray",hex:"#3d3d3d",label:"深灰"},{name:"Gray",hex:"#9E9E9E",label:"灰色"},{name:"Beige",hex:"#f5e6c8",label:"米白"},{name:"Brown",hex:"#8B5A2B",label:"棕色"},{name:"Dark Brown",hex:"#4a2c17",label:"深棕"}]},
+  {item:21,family_name:"WC - COMODO",family_name_en:"Commode toilet / Bedside commode",family_cn:"移动坐便椅",specs:["Aluminum","PVC","Plastic"],item_no:"—",detail:"待确认",pcs_ctn:0,size:"—",cbm:0,hq40:0,fob:0,image:"image25.png",colors:[{name:"Dark Blue",hex:"#1a365d",label:"深蓝"},{name:"Bright Blue",hex:"#0891b2",label:"亮蓝"},{name:"Navy",hex:"#172554",label:"藏青"},{name:"Light Blue",hex:"#bae6fd",label:"浅蓝"},{name:"White",hex:"#ffffff",label:"白色",light:true}]},
+  {item:22,family_name:"WC - COMODO",family_name_en:"Commode toilet / Bedside commode",family_cn:"移动坐便椅",specs:["Aluminum","PVC","Plastic"],item_no:"—",detail:"待确认",pcs_ctn:0,size:"—",cbm:0,hq40:0,fob:0,image:"image27.png",colors:[{name:"Dark Blue",hex:"#1a365d",label:"深蓝"},{name:"Bright Blue",hex:"#0891b2",label:"亮蓝"},{name:"Navy",hex:"#172554",label:"藏青"},{name:"Light Blue",hex:"#bae6fd",label:"浅蓝"},{name:"White",hex:"#ffffff",label:"白色",light:true}]},
+  {item:23,family_name:"BAÑO Y REGADERA",family_name_en:"Bath and shower aids",family_cn:"浴室辅助用品",specs:["Aluminum","Plastic","Rubber","Stainless steel"],item_no:"—",detail:"待确认",pcs_ctn:0,size:"—",cbm:0,hq40:0,fob:0,image:"image28.png",colors:[{name:"Dark Blue",hex:"#1a365d",label:"深蓝"},{name:"Bright Blue",hex:"#0891b2",label:"亮蓝"},{name:"Navy",hex:"#172554",label:"藏青"},{name:"Light Blue",hex:"#bae6fd",label:"浅蓝"},{name:"White",hex:"#ffffff",label:"白色",light:true}]},
+  {item:24,family_name:"BAÑO Y REGADERA",family_name_en:"Bath and shower aids",family_cn:"浴室辅助用品",specs:[],item_no:"—",detail:"待确认",pcs_ctn:0,size:"—",cbm:0,hq40:0,fob:0,image:"image29.png",colors:[{name:"Dark Blue",hex:"#1a365d",label:"深蓝"},{name:"Bright Blue",hex:"#0891b2",label:"亮蓝"},{name:"Navy",hex:"#172554",label:"藏青"},{name:"Light Blue",hex:"#bae6fd",label:"浅蓝"},{name:"White",hex:"#ffffff",label:"白色",light:true}]},
+  {item:25,family_name:"CAMA HOSPITAL",family_name_en:"Hospital bed",family_cn:"医院病床/护理床",specs:[],item_no:"—",detail:"待确认",pcs_ctn:0,size:"—",cbm:0,hq40:0,fob:0,image:"image30.png",colors:[{name:"Dark Blue",hex:"#1a365d",label:"深蓝"},{name:"Bright Blue",hex:"#0891b2",label:"亮蓝"},{name:"Navy",hex:"#172554",label:"藏青"},{name:"Light Blue",hex:"#bae6fd",label:"浅蓝"},{name:"White",hex:"#ffffff",label:"白色",light:true}]},
+  {item:26,family_name:"BAÑO Y REGADERA",family_name_en:"Bath and shower aids",family_cn:"浴室辅助用品",specs:["Aluminum","Plastic","Rubber","Stainless steel"],item_no:"—",detail:"待确认",pcs_ctn:0,size:"—",cbm:0,hq40:0,fob:0,image:"image31.png",colors:[{name:"Dark Blue",hex:"#1a365d",label:"深蓝"},{name:"Bright Blue",hex:"#0891b2",label:"亮蓝"},{name:"Navy",hex:"#172554",label:"藏青"},{name:"Light Blue",hex:"#bae6fd",label:"浅蓝"},{name:"White",hex:"#ffffff",label:"白色",light:true}]},
+  {item:27,family_name:"MEDIDOR DE PRESION DE BRAZO",family_name_en:"Upper arm blood pressure monitor",family_cn:"上臂式血压计",specs:["ABS Plastic","Nylon","PVC","LCD Glass"],item_no:"—",detail:"待确认",pcs_ctn:0,size:"—",cbm:0,hq40:0,fob:0,image:"image32.png",colors:[{name:"Dark Blue",hex:"#1a365d",label:"深蓝"},{name:"Bright Blue",hex:"#0891b2",label:"亮蓝"},{name:"Navy",hex:"#172554",label:"藏青"},{name:"Light Blue",hex:"#bae6fd",label:"浅蓝"},{name:"White",hex:"#ffffff",label:"白色",light:true}]},
+  {item:28,family_name:"NEBULIZADORES",family_name_en:"Nebulizers",family_cn:"雾化器",specs:["ABS Plastic","PP","PVC","Silicone","Stainless steel"],item_no:"—",detail:"待确认",pcs_ctn:0,size:"—",cbm:0,hq40:0,fob:0,image:"image33.png",colors:[{name:"Dark Blue",hex:"#1a365d",label:"深蓝"},{name:"Bright Blue",hex:"#0891b2",label:"亮蓝"},{name:"Navy",hex:"#172554",label:"藏青"},{name:"Light Blue",hex:"#bae6fd",label:"浅蓝"},{name:"White",hex:"#ffffff",label:"白色",light:true}]}
+];
+
+const PORTS = ["BEIJIAO","BUSAN","CHENNAI","CHITTAGONG","CHIWAN","CHONGQING","DALIAN","DANANG","FUZHOU","HAIPHONG","HO CHI MINH","HONG KONG","HUANGPU","JAKARTA","JIANGMEN","KAOHSIUNG","KARACHI","LA SPEZIA","LAEM CHABANG","LELIU","LIANYUNGANG","MANILA","MUNDRA","NANJING","NANSHA","NHAVA SHEVA","NINGBO","PASIR GUDANG","PHENOM PHEN","PORT KLANG","QINGDAO","RONGQI","SHANGHAI","SHANTOU","SHEKOU","SHUNDE","SURABAYA","TAICHUNG","TANJUNG PELEPAS","TIANJIN","TUTICORIN","WENZHOU","WUHAN","WUHU","XIAMEN","XIAOLAN","XINGANG","YANGON","YANTIAN","ZHANJIANG","ZHENJIANG","ZHONGSHAN","ZHUHAI"];
+
+const CATEGORY_META = {
+  "ANDADERA": { icon:"🦿", color:"#4285f4" },
+  "BASTON":   { icon:"🦯", color:"#0f9d58" },
+  "MULETAS":  { icon:"🦯", color:"#0f9d58" },
+  "SILLA":    { icon:"♿", color:"#7b1fa2" },
+  "WC":       { icon:"🚽", color:"#00838f" },
+  "BAÑO":     { icon:"🚿", color:"#0277bd" },
+  "CAMA":     { icon:"🛏️", color:"#c62828" },
+  "MEDIDOR":  { icon:"🩺", color:"#e65100" },
+  "NEBULIZADORES": { icon:"💨", color:"#455a64" }
+};
+
+function getCategoryMeta(family) {
+  for (const [key, meta] of Object.entries(CATEGORY_META)) {
+    if (family.toUpperCase().includes(key)) return meta;
+  }
+  return { icon:"📦", color:"#5f6368" };
+}
+
+const CATEGORIES = [...new Set(PRODUCTS.map(p => p.family_name_en))];
+
+// Cart: key = `${item}_${colorName}`, value = { item, colorName }
+let cart = {};
+let currentPurchaseItem = null;
+
+function init() {
+  renderCategoryChips();
+  renderProducts();
+  renderPorts();
+}
+
+function renderCategoryChips() {
+  const container = document.getElementById('categoryChips');
+  const allChip = document.createElement('span');
+  allChip.className = 'chip active';
+  allChip.textContent = '全部';
+  allChip.onclick = () => { document.querySelectorAll('.chip').forEach(c => c.classList.remove('active')); allChip.classList.add('active'); filterProducts(); };
+  container.appendChild(allChip);
+  CATEGORIES.forEach(cat => {
+    const chip = document.createElement('span');
+    chip.className = 'chip';
+    chip.textContent = cat;
+    chip.onclick = () => { document.querySelectorAll('.chip').forEach(c => c.classList.remove('active')); chip.classList.add('active'); filterProducts(); };
+    container.appendChild(chip);
+  });
+}
+
+function renderPorts() {
+  const sel = document.getElementById('qPort');
+  PORTS.forEach(p => {
+    const opt = document.createElement('option');
+    opt.value = p; opt.textContent = p;
+    if (p === 'QINGDAO') opt.selected = true;
+    sel.appendChild(opt);
+  });
+}
+
+function isLightColor(hex) {
+  if (!hex || hex.length < 7) return false;
+  const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+  return (r*0.299 + g*0.587 + b*0.114) > 186;
+}
+
+function getCartItemCount() {
+  return Object.keys(cart).length;
+}
+
+function isProductInCart(item) {
+  for (const k in cart) { if (parseInt(k.split('_')[0]) === item) return true; }
+  return false;
+}
+
+function renderProducts() {
+  const grid = document.getElementById('productGrid');
+  const search = document.getElementById('searchInput').value.toLowerCase();
+  const activeChip = document.querySelector('.chip.active');
+  const activeCategory = activeChip && activeChip.textContent !== '全部' ? activeChip.textContent : '';
+
+  const filtered = PRODUCTS.filter(p => {
+    const matchSearch = !search || p.family_name.toLowerCase().includes(search) || p.family_name_en.toLowerCase().includes(search) || p.family_cn.includes(search) || p.item_no.toLowerCase().includes(search);
+    const matchCategory = !activeCategory || p.family_name_en === activeCategory;
+    return matchSearch && matchCategory;
+  });
+
+  grid.innerHTML = filtered.map(p => {
+    const hasPrice = p.fob > 0;
+    const inCart = isProductInCart(p.item);
+    const meta = getCategoryMeta(p.family_name);
+
+    const selectedColorsForItem = [];
+    for (const k in cart) {
+      const parts = k.split('_');
+      if (parseInt(parts[0]) === p.item) selectedColorsForItem.push(parts.slice(1).join('_'));
+    }
+
+    const swatchesHTML = p.colors.map(c => {
+      const light = c.light || isLightColor(c.hex);
+      const isSelected = selectedColorsForItem.includes(c.name);
+      return `<span class="color-swatch${isSelected ? ' selected' : ''}${light ? ' light-color' : ''}" style="background:${c.hex}"><span class="swatch-tip">${c.label}</span></span>`;
+    }).join('');
+
+    return `
+      <div class="product-card ${inCart ? 'in-cart' : ''} ${!hasPrice ? 'no-price' : ''}">
+        <div class="card-image">
+          <img src="${IMG_BASE}${p.image}" alt="${p.family_name}" loading="lazy">
+          <span class="item-badge">#${p.item}</span>
+          ${inCart ? '<span class="cart-indicator">✓</span>' : ''}
+        </div>
+        <div class="color-swatches">
+          <span class="swatch-label">🎨</span>
+          ${swatchesHTML}
+        </div>
+        <div class="card-header">
+          <div class="card-family" style="color:${meta.color}">${meta.icon} ${p.family_name_en}</div>
+          <div class="card-title">${p.family_name}</div>
+        </div>
+        <div class="card-body">
+          <div class="card-specs">
+            ${p.specs.map(s => `<span class="spec-tag">${s}</span>`).join('')}
+            ${!hasPrice ? '<span class="status-badge pending">价格待确认</span>' : '<span class="status-badge in-stock">可报价</span>'}
+          </div>
+          <div class="card-detail">
+            <span><strong>型号:</strong> ${p.item_no}</span>
+            <span>${p.detail.replace(/\n/g, '<br>')}</span>
+          </div>
+          <div class="card-meta">
+            ${p.size !== '—' ? `<span>📏 ${p.size}</span>` : ''}
+            ${p.pcs_ctn > 0 ? `<span>📦 ${p.pcs_ctn} PCS/CTN</span>` : ''}
+            ${p.hq40 > 0 ? `<span>🚢 40HQ: ${Math.round(p.hq40)} PCS</span>` : ''}
+          </div>
+        </div>
+        <div class="card-footer">
+          <div class="price ${!hasPrice ? 'pending' : ''}">
+            ${hasPrice ? `$${p.fob.toFixed(2)} <small>/ PCS FOB</small>` : '价格待确认'}
+          </div>
+          <button class="btn ${hasPrice ? 'btn-primary' : 'btn-outline'} btn-sm" onclick="openPurchaseModal(${p.item})">加入询价</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function filterProducts() { renderProducts(); }
+
+// ========== Purchase Modal ==========
+function openPurchaseModal(item) {
+  currentPurchaseItem = item;
+  const p = PRODUCTS.find(x => x.item === item);
+  if (!p) return;
+
+  document.getElementById('pmImage').src = IMG_BASE + p.image;
+  document.getElementById('pmName').textContent = p.family_name + ' — ' + p.family_cn;
+  document.getElementById('pmModel').textContent = `#${p.item} | 型号: ${p.item_no}`;
+  document.getElementById('pmPrice').innerHTML = p.fob > 0
+    ? `$${p.fob.toFixed(2)} <small>/ PCS FOB</small>`
+    : '价格待确认';
+
+  const container = document.getElementById('pmColorRows');
+  container.innerHTML = p.colors.map(c => {
+    const light = c.light || isLightColor(c.hex);
+    const cartKey = `${item}_${c.name}`;
+    const checked = !!cart[cartKey];
+
+    return `
+      <div class="color-select-row" data-cart-key="${cartKey}">
+        <span class="csr-swatch${checked ? ' checked' : ''}${light ? ' light-color' : ''}"
+              style="background:${c.hex}"
+              onclick="togglePMColor(this)"
+              title="${c.label}"></span>
+        <span class="csr-label">${c.label} <small>(${c.name})</small></span>
+        <span class="csr-unit-price">${p.fob > 0 ? '$' + p.fob.toFixed(2) + '/PC' : 'TBD'}</span>
+      </div>
+    `;
+  }).join('');
+
+  document.getElementById('purchaseOverlay').classList.add('open');
+}
+
+function closePurchaseModal() {
+  document.getElementById('purchaseOverlay').classList.remove('open');
+  currentPurchaseItem = null;
+}
+
+function togglePMColor(el) {
+  el.classList.toggle('checked');
+}
+
+function confirmPurchase() {
+  if (!currentPurchaseItem) return;
+  const p = PRODUCTS.find(x => x.item === currentPurchaseItem);
+  if (!p) return;
+
+  let added = 0;
+  document.querySelectorAll('.color-select-row').forEach(row => {
+    const swatch = row.querySelector('.csr-swatch');
+    if (swatch && swatch.classList.contains('checked')) {
+      const cartKey = row.getAttribute('data-cart-key');
+      const parts = cartKey.split('_');
+      const itemNum = parseInt(parts[0]);
+      const colorName = parts.slice(1).join('_');
+      cart[cartKey] = { item: itemNum, colorName: colorName };
+      added++;
+    }
+  });
+
+  if (added === 0) {
+    alert('请至少选择一个颜色！');
+    return;
+  }
+
+  closePurchaseModal();
+  updateCartUI();
+  renderProducts();
+}
+
+// ========== Cart Drawer ==========
+function removeFromCart(cartKey) {
+  delete cart[cartKey];
+  updateCartUI();
+  renderProducts();
+}
+
+function clearCart() {
+  cart = {};
+  updateCartUI();
+  renderProducts();
+}
+
+function updateCartUI() {
+  const keys = Object.keys(cart);
+  document.getElementById('cartCount').textContent = keys.length;
+  document.getElementById('cartEmpty').style.display = keys.length ? 'none' : 'block';
+  document.getElementById('cartFooter').style.display = keys.length ? 'block' : 'none';
+
+  const html = keys.map(cartKey => {
+    const entry = cart[cartKey];
+    const p = PRODUCTS.find(x => x.item === entry.item);
+    if (!p) return '';
+    const meta = getCategoryMeta(p.family_name);
+    const colorObj = entry.colorName ? p.colors.find(c => c.name === entry.colorName) : null;
+
+    return `
+      <div class="cart-item">
+        <img class="cart-item-img" src="${IMG_BASE}${p.image}" alt="${p.family_name}">
+        <div class="cart-item-info">
+          <div class="name">${meta.icon} ${p.family_name_en}</div>
+          <div class="meta">#${entry.item} · ${p.item_no}</div>
+          ${colorObj ? `<div class="color-line"><span class="color-dot" style="background:${colorObj.hex};${colorObj.light||isLightColor(colorObj.hex)?'border:1px solid #ddd':''}"></span>${colorObj.label}</div>` : ''}
+          <div class="price-line">${p.fob > 0 ? '$' + p.fob.toFixed(2) + '/PC' : '价格待确认'}</div>
+        </div>
+        <button class="remove-btn" onclick="removeFromCart('${cartKey}')">🗑️</button>
+      </div>
+    `;
+  }).join('');
+
+  document.getElementById('cartItems').innerHTML = html;
+}
+
+function toggleDrawer() {
+  document.getElementById('drawerOverlay').classList.toggle('open');
+  document.getElementById('cartDrawer').classList.toggle('open');
+}
+
+// ========== Generate PDF Quotation ==========
+function openQuotePDFModal() {
+  const keys = Object.keys(cart);
+  if (!keys.length) { alert('请先添加产品到询价清单'); return; }
+  document.getElementById('quotePDFModal').classList.add('open');
+}
+
+function closeQuotePDFModal() {
+  document.getElementById('quotePDFModal').classList.remove('open');
+}
+
+function generatePDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF('p', 'mm', 'a4');
+
+  const sellerCompany = document.getElementById('qSellerCompany').value || 'Health & Wellness Medical Devices Co., Ltd.';
+  const sellerContact = document.getElementById('qSellerContact').value || '';
+  const sellerPhone = document.getElementById('qSellerPhone').value || '';
+  const sellerEmail = document.getElementById('qSellerEmail').value || '';
+  const buyerCompany = document.getElementById('qBuyerCompany').value || '';
+  const buyerContact = document.getElementById('qBuyerContact').value || '';
+  const buyerCountry = document.getElementById('qBuyerCountry').value || '';
+  const buyerEmail = document.getElementById('qBuyerEmail').value || '';
+  const incoterm = document.getElementById('qIncoterm').value;
+  const port = document.getElementById('qPort').value;
+  const destPort = document.getElementById('qDestPort').value || 'TBD';
+  const payment = document.getElementById('qPayment').value;
+  const validity = document.getElementById('qValidity').value || '30 days';
+  const leadTime = document.getElementById('qLeadTime').value || '30-45 days';
+  const notes = document.getElementById('qNotes').value || '';
+
+  const today = new Date();
+  const dateStr = today.toLocaleDateString('en-US', { year:'numeric', month:'short', day:'numeric' });
+  const quoteNo = 'QT-' + today.getFullYear() + (today.getMonth()+1).toString().padStart(2,'0') + today.getDate().toString().padStart(2,'0') + '-' + Math.floor(Math.random()*900+100);
+
+  // Header
+  doc.setFillColor(26, 115, 232);
+  doc.rect(0, 0, 210, 38, 'F');
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(22);
+  doc.setFont('helvetica', 'bold');
+  doc.text('QUOTATION', 15, 18);
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'normal');
+  doc.text(sellerCompany, 15, 28);
+  doc.setFontSize(9);
+  doc.text(`Quote No: ${quoteNo}  |  Date: ${dateStr}`, 15, 34);
+
+  // Seller & Buyer info
+  doc.setTextColor(0, 0, 0);
+  let y = 48;
+  doc.setFontSize(9);
+  doc.setFont('helvetica', 'bold');
+  doc.text('FROM:', 15, y);
+  doc.setFont('helvetica', 'normal');
+  doc.text(sellerCompany, 15, y + 5);
+  if (sellerContact) doc.text('Attn: ' + sellerContact, 15, y + 10);
+  if (sellerPhone) doc.text('Tel: ' + sellerPhone, 15, y + 15);
+  if (sellerEmail) doc.text('Email: ' + sellerEmail, 15, y + 20);
+
+  doc.setFont('helvetica', 'bold');
+  doc.text('TO:', 115, y);
+  doc.setFont('helvetica', 'normal');
+  doc.text(buyerCompany || 'N/A', 115, y + 5);
+  if (buyerContact) doc.text('Attn: ' + buyerContact, 115, y + 10);
+  if (buyerCountry) doc.text('Country: ' + buyerCountry, 115, y + 15);
+  if (buyerEmail) doc.text('Email: ' + buyerEmail, 115, y + 20);
+
+  y = y + 28;
+
+  // Product Table
+  const keys = Object.keys(cart);
+  // Group by item
+  const grouped = {};
+  keys.forEach(cartKey => {
+    const entry = cart[cartKey];
+    if (!grouped[entry.item]) grouped[entry.item] = [];
+    const p = PRODUCTS.find(x => x.item === entry.item);
+    const colorObj = entry.colorName ? p.colors.find(c => c.name === entry.colorName) : null;
+    grouped[entry.item].push(colorObj ? colorObj.label : 'N/A');
+  });
+
+  const tableBody = [];
+  let idx = 1;
+  for (const itemNum in grouped) {
+    const p = PRODUCTS.find(x => x.item === parseInt(itemNum));
+    if (!p) continue;
+    tableBody.push([
+      idx++,
+      p.item_no || '-',
+      p.family_name + '\n(' + p.family_name_en + ')',
+      p.size !== '—' ? p.size : '-',
+      grouped[itemNum].join(', '),
+      p.pcs_ctn > 0 ? p.pcs_ctn + ' pcs' : '-',
+      p.fob > 0 ? '$' + p.fob.toFixed(2) : 'TBD',
+      p.fob > 0 ? '$' + p.fob.toFixed(2) : 'TBD'
+    ]);
+  }
+
+  doc.autoTable({
+    startY: y,
+    head: [['#', 'Item No.', 'Product Description', 'Size', 'Color', 'MOQ', 'Unit Price\n(FOB)', 'Unit Price\n(CIF ref.)']],
+    body: tableBody,
+    styles: { fontSize: 8, cellPadding: 3, overflow: 'linebreak' },
+    headStyles: { fillColor: [26, 115, 232], textColor: [255,255,255], fontStyle: 'bold', halign: 'center' },
+    columnStyles: {
+      0: { halign: 'center', cellWidth: 10 },
+      1: { cellWidth: 22 },
+      2: { cellWidth: 48 },
+      3: { cellWidth: 28 },
+      4: { cellWidth: 28 },
+      5: { halign: 'center', cellWidth: 16 },
+      6: { halign: 'right', cellWidth: 20 },
+      7: { halign: 'right', cellWidth: 20 }
+    },
+    alternateRowStyles: { fillColor: [240, 245, 255] },
+    margin: { left: 15, right: 15 },
+  });
+
+  y = doc.lastAutoTable.finalY + 10;
+
+  // Trade Terms
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(26, 115, 232);
+  doc.text('TRADE TERMS', 15, y);
+  y += 6;
+
+  doc.setFontSize(9);
+  doc.setTextColor(0, 0, 0);
+  doc.setFont('helvetica', 'normal');
+  const terms = [
+    ['Incoterm', `${incoterm} ${port} -> ${destPort}`],
+    ['Payment', payment],
+    ['Validity', validity],
+    ['Lead Time', leadTime],
+    ['MOQ', '300 PCS (negotiable for bulk orders)'],
+  ];
+  terms.forEach(([label, value]) => {
+    doc.setFont('helvetica', 'bold');
+    doc.text(label + ':', 15, y);
+    doc.setFont('helvetica', 'normal');
+    doc.text(value, 55, y);
+    y += 5;
+  });
+
+  y += 4;
+
+  // Notes
+  if (notes) {
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(26, 115, 232);
+    doc.text('REMARKS', 15, y);
+    y += 6;
+    doc.setFontSize(9);
+    doc.setTextColor(0, 0, 0);
+    doc.setFont('helvetica', 'normal');
+    const noteLines = doc.splitTextToSize(notes, 170);
+    doc.text(noteLines, 15, y);
+    y += noteLines.length * 5;
+  }
+
+  y += 6;
+
+  // Footer
+  doc.setFontSize(8);
+  doc.setTextColor(120, 120, 120);
+  doc.text('This quotation is for reference only. Final prices subject to confirmation upon order placement.', 15, y);
+  y += 4;
+  doc.text('Prices are in USD. Exchange rate fluctuation may affect final pricing.', 15, y);
+  y += 4;
+  doc.text(`Generated on ${dateStr} | ${quoteNo}`, 15, y);
+
+  // Signature area
+  if (y < 240) {
+    y = 250;
+  } else {
+    doc.addPage();
+    y = 20;
+  }
+  doc.setDrawColor(200, 200, 200);
+  doc.line(15, y, 90, y);
+  doc.line(120, y, 195, y);
+  doc.setFontSize(8);
+  doc.setTextColor(0, 0, 0);
+  doc.text('Signature (Seller)', 15, y + 5);
+  doc.text('Signature (Buyer)', 120, y + 5);
+
+  // Save
+  doc.save(`Quotation_${quoteNo}.pdf`);
+  closeQuotePDFModal();
+}
+
+// ========== Email Modal ==========
+function openEmailModal() {
+  const keys = Object.keys(cart);
+  if (!keys.length) { alert('请先添加产品到询价清单'); return; }
+
+  // Generate email preview
+  const company = document.getElementById('eCompany').value || '[Your Company]';
+  const contact = document.getElementById('eContact').value || '[Your Name]';
+  const emailNotes = document.getElementById('eNotes').value || '';
+
+  const today = new Date().toLocaleDateString('en-US', { year:'numeric', month:'short', day:'numeric' });
+
+  // Group cart items
+  const grouped = {};
+  keys.forEach(cartKey => {
+    const entry = cart[cartKey];
+    if (!grouped[entry.item]) grouped[entry.item] = [];
+    const p = PRODUCTS.find(x => x.item === entry.item);
+    const colorObj = entry.colorName ? p.colors.find(c => c.name === entry.colorName) : null;
+    grouped[entry.item].push(colorObj ? colorObj.label + '(' + colorObj.name + ')' : 'N/A');
+  });
+
+  let itemList = '';
+  let idx = 1;
+  for (const itemNum in grouped) {
+    const p = PRODUCTS.find(x => x.item === parseInt(itemNum));
+    if (!p) continue;
+    itemList += `${idx}. ${p.family_name} (${p.family_name_en})\n`;
+    itemList += `   Item No: ${p.item_no}  |  Unit Price: ${p.fob > 0 ? '$' + p.fob.toFixed(2) + '/PC' : 'TBD'}\n`;
+    itemList += `   Colors: ${grouped[itemNum].join(', ')}\n`;
+    if (p.detail && p.detail !== '待确认') itemList += `   Details: ${p.detail.replace(/\n/g, ', ')}\n`;
+    itemList += '\n';
+    idx++;
+  }
+
+  const emailText = `Subject: Product Inquiry - ${company}
+
+Date: ${today}
+
+Dear Sales Team,
+
+We are interested in the following products and would like to request a quotation.
+
+CLIENT INFORMATION:
+- Company: ${company}
+- Contact: ${contact}
+
+PRODUCTS OF INTEREST:
+${itemList}Please kindly provide:
+1. Best price for the requested quantities
+2. Available stock / lead time
+3. Sample availability and cost
+4. Packaging details
+
+${emailNotes ? 'ADDITIONAL NOTES:\n' + emailNotes + '\n' : ''}We look forward to your prompt response.
+
+Best regards,
+${contact}
+${company}`;
+
+  document.getElementById('emailPreview').textContent = emailText;
+  document.getElementById('emailModal').classList.add('open');
+}
+
+function closeEmailModal() {
+  document.getElementById('emailModal').classList.remove('open');
+}
+
+function copyEmailText() {
+  const text = document.getElementById('emailPreview').textContent;
+  navigator.clipboard.writeText(text).then(() => alert('邮件内容已复制到剪贴板!'));
+}
+
+function openMailto() {
+  const company = document.getElementById('eCompany').value || 'Inquiry';
+  const recipient = document.getElementById('eRecipient').value || '';
+  const subject = encodeURIComponent(`Product Inquiry - ${company}`);
+  const body = encodeURIComponent(document.getElementById('emailPreview').textContent);
+  window.open(`mailto:${recipient}?subject=${subject}&body=${body}`);
+}
+
+init();
+</script>
+</body>
+</html>
