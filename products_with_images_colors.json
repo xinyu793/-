@@ -1,0 +1,863 @@
+[
+  {
+    "item": 1,
+    "img": "",
+    "colors": [
+      {
+        "name": "Negro",
+        "hex": "#1a1a1a",
+        "label": "黑色"
+      },
+      {
+        "name": "Azul Metálico",
+        "hex": "#1e3a5f",
+        "label": "金属蓝"
+      },
+      {
+        "name": "Bronce / Madera",
+        "hex": "#8B6914",
+        "label": "古铜/木纹"
+      },
+      {
+        "name": "Rojo / Madera",
+        "hex": "#722F37",
+        "label": "红木色"
+      },
+      {
+        "name": "Plata / Cromo",
+        "hex": "#C0C0C0",
+        "label": "银/铬色"
+      }
+    ],
+    "color_key": "image3.png"
+  },
+  {
+    "item": 2,
+    "img": "",
+    "colors": [
+      {
+        "name": "Negro",
+        "hex": "#1a1a1a",
+        "label": "黑色"
+      },
+      {
+        "name": "Azul Metálico",
+        "hex": "#1e3a5f",
+        "label": "金属蓝"
+      },
+      {
+        "name": "Bronce / Madera",
+        "hex": "#8B6914",
+        "label": "古铜/木纹"
+      },
+      {
+        "name": "Rojo / Madera",
+        "hex": "#722F37",
+        "label": "红木色"
+      },
+      {
+        "name": "Plata / Cromo",
+        "hex": "#C0C0C0",
+        "label": "银/铬色"
+      }
+    ],
+    "color_key": "image3.png"
+  },
+  {
+    "item": 3,
+    "img": "",
+    "colors": [
+      {
+        "name": "Negro",
+        "hex": "#1a1a1a",
+        "label": "黑色"
+      },
+      {
+        "name": "Azul Metálico",
+        "hex": "#1e3a5f",
+        "label": "金属蓝"
+      },
+      {
+        "name": "Bronce / Madera",
+        "hex": "#8B6914",
+        "label": "古铜/木纹"
+      },
+      {
+        "name": "Rojo / Madera",
+        "hex": "#722F37",
+        "label": "红木色"
+      },
+      {
+        "name": "Plata / Cromo",
+        "hex": "#C0C0C0",
+        "label": "银/铬色"
+      }
+    ],
+    "color_key": "image3.png"
+  },
+  {
+    "item": 4,
+    "img": "",
+    "colors": [
+      {
+        "name": "Negro",
+        "hex": "#1a1a1a",
+        "label": "黑色"
+      },
+      {
+        "name": "Azul Metálico",
+        "hex": "#1e3a5f",
+        "label": "金属蓝"
+      },
+      {
+        "name": "Bronce / Madera",
+        "hex": "#8B6914",
+        "label": "古铜/木纹"
+      },
+      {
+        "name": "Rojo / Madera",
+        "hex": "#722F37",
+        "label": "红木色"
+      },
+      {
+        "name": "Plata / Cromo",
+        "hex": "#C0C0C0",
+        "label": "银/铬色"
+      }
+    ],
+    "color_key": "image3.png"
+  },
+  {
+    "item": 5,
+    "img": "",
+    "colors": [
+      {
+        "name": "Negro",
+        "hex": "#1a1a1a",
+        "label": "黑色"
+      },
+      {
+        "name": "Azul Metálico",
+        "hex": "#1e3a5f",
+        "label": "金属蓝"
+      },
+      {
+        "name": "Bronce / Madera",
+        "hex": "#8B6914",
+        "label": "古铜/木纹"
+      },
+      {
+        "name": "Rojo / Madera",
+        "hex": "#722F37",
+        "label": "红木色"
+      },
+      {
+        "name": "Plata / Cromo",
+        "hex": "#C0C0C0",
+        "label": "银/铬色"
+      }
+    ],
+    "color_key": "image3.png"
+  },
+  {
+    "item": 6,
+    "img": "",
+    "colors": [
+      {
+        "name": "Negro",
+        "hex": "#1a1a1a",
+        "label": "黑色"
+      },
+      {
+        "name": "Azul Metálico",
+        "hex": "#1e3a5f",
+        "label": "金属蓝"
+      },
+      {
+        "name": "Bronce / Madera",
+        "hex": "#8B6914",
+        "label": "古铜/木纹"
+      },
+      {
+        "name": "Rojo / Madera",
+        "hex": "#722F37",
+        "label": "红木色"
+      },
+      {
+        "name": "Plata / Cromo",
+        "hex": "#C0C0C0",
+        "label": "银/铬色"
+      }
+    ],
+    "color_key": "image3.png"
+  },
+  {
+    "item": 7,
+    "img": "",
+    "colors": [
+      {
+        "name": "Black",
+        "hex": "#000000",
+        "label": "黑色"
+      },
+      {
+        "name": "Red",
+        "hex": "#D9281C",
+        "label": "红色"
+      },
+      {
+        "name": "Blue",
+        "hex": "#1b3a6e",
+        "label": "蓝色"
+      },
+      {
+        "name": "Gray",
+        "hex": "#C0C0C0",
+        "label": "灰色"
+      }
+    ],
+    "color_key": "image6.jpeg"
+  },
+  {
+    "item": 8,
+    "img": "",
+    "colors": [
+      {
+        "name": "Black",
+        "hex": "#000000",
+        "label": "黑色"
+      },
+      {
+        "name": "Red",
+        "hex": "#D9281C",
+        "label": "红色"
+      },
+      {
+        "name": "Blue",
+        "hex": "#1b3a6e",
+        "label": "蓝色"
+      },
+      {
+        "name": "Gray",
+        "hex": "#C0C0C0",
+        "label": "灰色"
+      }
+    ],
+    "color_key": "image6.jpeg"
+  },
+  {
+    "item": 9,
+    "img": "",
+    "colors": [
+      {
+        "name": "Black",
+        "hex": "#000000",
+        "label": "黑色"
+      },
+      {
+        "name": "Red",
+        "hex": "#D9281C",
+        "label": "红色"
+      },
+      {
+        "name": "Blue",
+        "hex": "#1b3a6e",
+        "label": "蓝色"
+      },
+      {
+        "name": "Gray",
+        "hex": "#C0C0C0",
+        "label": "灰色"
+      }
+    ],
+    "color_key": "image6.jpeg"
+  },
+  {
+    "item": 10,
+    "img": "",
+    "colors": [
+      {
+        "name": "Black",
+        "hex": "#000000",
+        "label": "黑色"
+      },
+      {
+        "name": "Red",
+        "hex": "#D9281C",
+        "label": "红色"
+      },
+      {
+        "name": "Blue",
+        "hex": "#1b3a6e",
+        "label": "蓝色"
+      },
+      {
+        "name": "Gray",
+        "hex": "#C0C0C0",
+        "label": "灰色"
+      }
+    ],
+    "color_key": "image6.jpeg"
+  },
+  {
+    "item": 11,
+    "img": "",
+    "colors": [
+      {
+        "name": "Black",
+        "hex": "#000000",
+        "label": "黑色"
+      },
+      {
+        "name": "Red",
+        "hex": "#D9281C",
+        "label": "红色"
+      },
+      {
+        "name": "Blue",
+        "hex": "#1b3a6e",
+        "label": "蓝色"
+      },
+      {
+        "name": "Gray",
+        "hex": "#C0C0C0",
+        "label": "灰色"
+      }
+    ],
+    "color_key": "image6.jpeg"
+  },
+  {
+    "item": 12,
+    "img": "",
+    "colors": [
+      {
+        "name": "Black",
+        "hex": "#000000",
+        "label": "黑色"
+      },
+      {
+        "name": "Red",
+        "hex": "#D9281C",
+        "label": "红色"
+      },
+      {
+        "name": "Blue",
+        "hex": "#1b3a6e",
+        "label": "蓝色"
+      },
+      {
+        "name": "Gray",
+        "hex": "#C0C0C0",
+        "label": "灰色"
+      }
+    ],
+    "color_key": "image6.jpeg"
+  },
+  {
+    "item": 13,
+    "img": "",
+    "colors": [
+      {
+        "name": "Black",
+        "hex": "#000000",
+        "label": "黑色"
+      },
+      {
+        "name": "Red",
+        "hex": "#D9281C",
+        "label": "红色"
+      },
+      {
+        "name": "Blue",
+        "hex": "#1b3a6e",
+        "label": "蓝色"
+      },
+      {
+        "name": "Gray",
+        "hex": "#C0C0C0",
+        "label": "灰色"
+      }
+    ],
+    "color_key": "image6.jpeg"
+  },
+  {
+    "item": 14,
+    "img": "",
+    "colors": [
+      {
+        "name": "Dark Gray",
+        "hex": "#3d3d3d",
+        "label": "深灰"
+      },
+      {
+        "name": "Gray",
+        "hex": "#9E9E9E",
+        "label": "灰色"
+      },
+      {
+        "name": "Beige",
+        "hex": "#f5e6c8",
+        "label": "米白"
+      },
+      {
+        "name": "Brown",
+        "hex": "#8B5A2B",
+        "label": "棕色"
+      },
+      {
+        "name": "Dark Brown",
+        "hex": "#4a2c17",
+        "label": "深棕"
+      }
+    ],
+    "color_key": "image12.png"
+  },
+  {
+    "item": 15,
+    "img": "",
+    "colors": [
+      {
+        "name": "Dark Gray",
+        "hex": "#3d3d3d",
+        "label": "深灰"
+      },
+      {
+        "name": "Gray",
+        "hex": "#9E9E9E",
+        "label": "灰色"
+      },
+      {
+        "name": "Beige",
+        "hex": "#f5e6c8",
+        "label": "米白"
+      },
+      {
+        "name": "Brown",
+        "hex": "#8B5A2B",
+        "label": "棕色"
+      },
+      {
+        "name": "Dark Brown",
+        "hex": "#4a2c17",
+        "label": "深棕"
+      }
+    ],
+    "color_key": "image12.png"
+  },
+  {
+    "item": 16,
+    "img": "",
+    "colors": [
+      {
+        "name": "Dark Gray",
+        "hex": "#3d3d3d",
+        "label": "深灰"
+      },
+      {
+        "name": "Gray",
+        "hex": "#9E9E9E",
+        "label": "灰色"
+      },
+      {
+        "name": "Beige",
+        "hex": "#f5e6c8",
+        "label": "米白"
+      },
+      {
+        "name": "Brown",
+        "hex": "#8B5A2B",
+        "label": "棕色"
+      },
+      {
+        "name": "Dark Brown",
+        "hex": "#4a2c17",
+        "label": "深棕"
+      }
+    ],
+    "color_key": "image12.png"
+  },
+  {
+    "item": 17,
+    "img": "",
+    "colors": [
+      {
+        "name": "Dark Gray",
+        "hex": "#3d3d3d",
+        "label": "深灰"
+      },
+      {
+        "name": "Gray",
+        "hex": "#9E9E9E",
+        "label": "灰色"
+      },
+      {
+        "name": "Beige",
+        "hex": "#f5e6c8",
+        "label": "米白"
+      },
+      {
+        "name": "Brown",
+        "hex": "#8B5A2B",
+        "label": "棕色"
+      },
+      {
+        "name": "Dark Brown",
+        "hex": "#4a2c17",
+        "label": "深棕"
+      }
+    ],
+    "color_key": "image12.png"
+  },
+  {
+    "item": 18,
+    "img": "",
+    "colors": [
+      {
+        "name": "Dark Blue",
+        "hex": "#1a365d",
+        "label": "深蓝"
+      },
+      {
+        "name": "Bright Blue",
+        "hex": "#0891b2",
+        "label": "亮蓝"
+      },
+      {
+        "name": "Navy",
+        "hex": "#172554",
+        "label": "藏青"
+      },
+      {
+        "name": "Light Blue",
+        "hex": "#bae6fd",
+        "label": "浅蓝"
+      },
+      {
+        "name": "White",
+        "hex": "#ffffff; border: 1px solid #ddd",
+        "label": "白色"
+      }
+    ],
+    "color_key": "image26.jpeg"
+  },
+  {
+    "item": 19,
+    "img": "",
+    "colors": [
+      {
+        "name": "Dark Gray",
+        "hex": "#3d3d3d",
+        "label": "深灰"
+      },
+      {
+        "name": "Gray",
+        "hex": "#9E9E9E",
+        "label": "灰色"
+      },
+      {
+        "name": "Beige",
+        "hex": "#f5e6c8",
+        "label": "米白"
+      },
+      {
+        "name": "Brown",
+        "hex": "#8B5A2B",
+        "label": "棕色"
+      },
+      {
+        "name": "Dark Brown",
+        "hex": "#4a2c17",
+        "label": "深棕"
+      }
+    ],
+    "color_key": "image12.png"
+  },
+  {
+    "item": 20,
+    "img": "",
+    "colors": [
+      {
+        "name": "Dark Gray",
+        "hex": "#3d3d3d",
+        "label": "深灰"
+      },
+      {
+        "name": "Gray",
+        "hex": "#9E9E9E",
+        "label": "灰色"
+      },
+      {
+        "name": "Beige",
+        "hex": "#f5e6c8",
+        "label": "米白"
+      },
+      {
+        "name": "Brown",
+        "hex": "#8B5A2B",
+        "label": "棕色"
+      },
+      {
+        "name": "Dark Brown",
+        "hex": "#4a2c17",
+        "label": "深棕"
+      }
+    ],
+    "color_key": "image12.png"
+  },
+  {
+    "item": 21,
+    "img": "",
+    "colors": [
+      {
+        "name": "Dark Blue",
+        "hex": "#1a365d",
+        "label": "深蓝"
+      },
+      {
+        "name": "Bright Blue",
+        "hex": "#0891b2",
+        "label": "亮蓝"
+      },
+      {
+        "name": "Navy",
+        "hex": "#172554",
+        "label": "藏青"
+      },
+      {
+        "name": "Light Blue",
+        "hex": "#bae6fd",
+        "label": "浅蓝"
+      },
+      {
+        "name": "White",
+        "hex": "#ffffff; border: 1px solid #ddd",
+        "label": "白色"
+      }
+    ],
+    "color_key": "image26.jpeg"
+  },
+  {
+    "item": 22,
+    "img": "",
+    "colors": [
+      {
+        "name": "Dark Blue",
+        "hex": "#1a365d",
+        "label": "深蓝"
+      },
+      {
+        "name": "Bright Blue",
+        "hex": "#0891b2",
+        "label": "亮蓝"
+      },
+      {
+        "name": "Navy",
+        "hex": "#172554",
+        "label": "藏青"
+      },
+      {
+        "name": "Light Blue",
+        "hex": "#bae6fd",
+        "label": "浅蓝"
+      },
+      {
+        "name": "White",
+        "hex": "#ffffff; border: 1px solid #ddd",
+        "label": "白色"
+      }
+    ],
+    "color_key": "image26.jpeg"
+  },
+  {
+    "item": 23,
+    "img": "",
+    "colors": [
+      {
+        "name": "Dark Blue",
+        "hex": "#1a365d",
+        "label": "深蓝"
+      },
+      {
+        "name": "Bright Blue",
+        "hex": "#0891b2",
+        "label": "亮蓝"
+      },
+      {
+        "name": "Navy",
+        "hex": "#172554",
+        "label": "藏青"
+      },
+      {
+        "name": "Light Blue",
+        "hex": "#bae6fd",
+        "label": "浅蓝"
+      },
+      {
+        "name": "White",
+        "hex": "#ffffff; border: 1px solid #ddd",
+        "label": "白色"
+      }
+    ],
+    "color_key": "image26.jpeg"
+  },
+  {
+    "item": 24,
+    "img": "",
+    "colors": [
+      {
+        "name": "Dark Blue",
+        "hex": "#1a365d",
+        "label": "深蓝"
+      },
+      {
+        "name": "Bright Blue",
+        "hex": "#0891b2",
+        "label": "亮蓝"
+      },
+      {
+        "name": "Navy",
+        "hex": "#172554",
+        "label": "藏青"
+      },
+      {
+        "name": "Light Blue",
+        "hex": "#bae6fd",
+        "label": "浅蓝"
+      },
+      {
+        "name": "White",
+        "hex": "#ffffff; border: 1px solid #ddd",
+        "label": "白色"
+      }
+    ],
+    "color_key": "image26.jpeg"
+  },
+  {
+    "item": 25,
+    "img": "",
+    "colors": [
+      {
+        "name": "Dark Blue",
+        "hex": "#1a365d",
+        "label": "深蓝"
+      },
+      {
+        "name": "Bright Blue",
+        "hex": "#0891b2",
+        "label": "亮蓝"
+      },
+      {
+        "name": "Navy",
+        "hex": "#172554",
+        "label": "藏青"
+      },
+      {
+        "name": "Light Blue",
+        "hex": "#bae6fd",
+        "label": "浅蓝"
+      },
+      {
+        "name": "White",
+        "hex": "#ffffff; border: 1px solid #ddd",
+        "label": "白色"
+      }
+    ],
+    "color_key": "image26.jpeg"
+  },
+  {
+    "item": 26,
+    "img": "",
+    "colors": [
+      {
+        "name": "Dark Blue",
+        "hex": "#1a365d",
+        "label": "深蓝"
+      },
+      {
+        "name": "Bright Blue",
+        "hex": "#0891b2",
+        "label": "亮蓝"
+      },
+      {
+        "name": "Navy",
+        "hex": "#172554",
+        "label": "藏青"
+      },
+      {
+        "name": "Light Blue",
+        "hex": "#bae6fd",
+        "label": "浅蓝"
+      },
+      {
+        "name": "White",
+        "hex": "#ffffff; border: 1px solid #ddd",
+        "label": "白色"
+      }
+    ],
+    "color_key": "image26.jpeg"
+  },
+  {
+    "item": 27,
+    "img": "",
+    "colors": [
+      {
+        "name": "Dark Blue",
+        "hex": "#1a365d",
+        "label": "深蓝"
+      },
+      {
+        "name": "Bright Blue",
+        "hex": "#0891b2",
+        "label": "亮蓝"
+      },
+      {
+        "name": "Navy",
+        "hex": "#172554",
+        "label": "藏青"
+      },
+      {
+        "name": "Light Blue",
+        "hex": "#bae6fd",
+        "label": "浅蓝"
+      },
+      {
+        "name": "White",
+        "hex": "#ffffff; border: 1px solid #ddd",
+        "label": "白色"
+      }
+    ],
+    "color_key": "image26.jpeg"
+  },
+  {
+    "item": 28,
+    "img": "",
+    "colors": [
+      {
+        "name": "Dark Blue",
+        "hex": "#1a365d",
+        "label": "深蓝"
+      },
+      {
+        "name": "Bright Blue",
+        "hex": "#0891b2",
+        "label": "亮蓝"
+      },
+      {
+        "name": "Navy",
+        "hex": "#172554",
+        "label": "藏青"
+      },
+      {
+        "name": "Light Blue",
+        "hex": "#bae6fd",
+        "label": "浅蓝"
+      },
+      {
+        "name": "White",
+        "hex": "#ffffff; border: 1px solid #ddd",
+        "label": "白色"
+      }
+    ],
+    "color_key": "image26.jpeg"
+  }
+]
